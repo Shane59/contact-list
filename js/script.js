@@ -4,7 +4,6 @@ const displayContactList = [];
 const pages = Math.ceil(users.length / 10 );
 let pageCount = 1;
 
-console.log(users.length);
 document.querySelector(".total-contacts").innerHTML = `Total: ${users.length}`
 
 
@@ -47,16 +46,11 @@ document.querySelector(".list").innerHTML += displayContactList.join('');
 
 // document.querySelector(".page-1").classList.add("active");
 
-const changePage = (e) => {
-  console.log(e.target.innerHTML);
-  displayCurrentPage(parseInt(e.target.innerHTML));
-}
-
 const displayPges = pages => {
   const temp = [];
   for (let i = 0; i < pages; i++) {
     temp.push(
-      `<li class="page-num">${i + 1}</li>`
+      `<li class="page-num-list"><a href="#" class="page-num page-num-${i + 1}">${i + 1}</a></li>`
     )
   }
   return temp.join('');
@@ -64,42 +58,51 @@ const displayPges = pages => {
 
 const pageNums = document.getElementsByClassName('page-num');
 
-const addEventListenerToPageNum = () => {
-  console.log('hi');
-  for (let i = 0; i < pageNums.length; i++) {
-    
-    pageNums[i].addEventListener("click", changePage);
-  }
-}
-
 document.querySelector(".pages").innerHTML = displayPges(pages);
-addEventListenerToPageNum();
 let currentPage = 1;
-console.log(pages);
 
 
 const displayCurrentPage = (pageNum) => {
-  console.log(`page num is ${pageNum}`);
-  
   currentPage = pageNum;
   for (let i = 0; i < pages; i++) {
     const page = i + 1;
-    console.log(document.querySelector(`.page-${page}`));
     
     if (i + 1 != currentPage) {
       document.querySelector(`.page-${page}`).classList.add('hide');
       document.querySelector(`.page-${page}`).classList.remove('active');
+      document.querySelector(`.page-num-${page}`).classList.remove('active-link');
     } else {
       document.querySelector(`.page-${page}`).classList.add('active');
       document.querySelector(`.page-${page}`).classList.remove('hide');
+      document.querySelector(`.page-num-${page}`).classList.add('active-link');
     }
   }
 }
 
 displayCurrentPage(currentPage);
+const changePage = (e) => {
+  displayCurrentPage(parseInt(e.target.innerHTML));
+  addEventListenerToPageNum();
+}
+
+const addEventListenerToPageNum = () => {
+  for (let i = 0; i < pageNums.length; i++) {
+    if (i + 1 != currentPage) {
+      pageNums[i].addEventListener("click", changePage);
+      pageNums[i].classList.remove("disabled-link");
+    } else {
+      pageNums[i].classList.add("disabled-link");
+    }
+  }
+}
+
+addEventListenerToPageNum();
 
 
 /**
  * references:
  * https://stackoverflow.com/questions/32151704/addeventlistener-is-not-a-function
+ * https://css-tricks.com/multiple-class-id-selectors/
+ * https://www.w3schools.com/cssref/css3_pr_pointer-events.php
+ * 
  */
