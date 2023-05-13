@@ -9,7 +9,13 @@ document.querySelector(".total-contacts").innerHTML = `Total: ${users.length}`
 
 const contactInfos = (contactList) => {
   for (let i = 0; i < contactList.length; i++) {
+    const joinedFullDate = contactList[i].registered.date.split("-");
+    
+    const joinedYear = joinedFullDate[0];
+    const joinedMonth = joinedFullDate[1];
+    const joinedDate = joinedFullDate[2].slice(0, 2);
     if ((i + 1) % 10 == 1) {
+
       displayContactList.push(`<ul class='contact-list page-${pageCount++}'>`);
       displayContactList.push(
         `<li class="contact-item cf">
@@ -18,7 +24,7 @@ const contactInfos = (contactList) => {
             <h3>${contactList[i].name.first} ${contactList[i].name.last}</h3>
             <span class="email">${contactList[i].email}</span>
           </div>
-          <div class="joined-details"><span class="date">${contactList[i].registered.date}</span></div>
+          <div class="joined-details"><span class="date">${joinedMonth}/${joinedDate}/${joinedYear}</span></div>
         </li>`
       )
     } else {
@@ -29,7 +35,7 @@ const contactInfos = (contactList) => {
             <h3>${contactList[i].name.first} ${contactList[i].name.last}</h3>
             <span class="email">${contactList[i].email}</span>
           </div>
-          <div class="joined-details"><span class="date">${contactList[i].registered.date}</span></div>
+          <div class="joined-details"><span class="date">${joinedMonth}/${joinedDate}/${joinedYear}</span></div>
         </li>`
       )
     }
