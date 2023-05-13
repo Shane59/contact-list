@@ -87,13 +87,25 @@ ol, ul {
 .hide {
   display: none;
 }
-.page-num {
+.page-num-list {
   list-style: none;
   width: 30px;
   cursor: pointer;
+}
+.page-num {
+  color: blue;
 }
 .pages {
   display: flex;
   text-align: center;
   justify-content: center;
+}
+.active-link {
+  text-decoration: none;
+  cursor: default;
+  color: black;
+}
+.page-num.disabled-link {
+  pointer-events: none;
+  color: black;
 }
