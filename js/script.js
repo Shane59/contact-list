@@ -1,76 +1,58 @@
 import users from './data.js';
 
-const displayContactList = [];
-const pages = Math.ceil(users.length / 10 );
+const displayedContactList = [];
+const totalPage = Math.ceil(users.length / 10 );
+
+const userContactComponent = (image, first, last, email, joinedMonth, joinedDate, joinedYear) => {
+  return (
+    `<li class="contact-item cf">
+      <div class="contact-details">
+        <img class="avatar" src="${image}">
+        <h3>${first} ${last}</h3>
+        <span class="email">${email}</span>
+      </div>
+      <div class="joined-details"><span class="date">${joinedMonth}/${joinedDate}/${joinedYear}</span></div>
+    </li>`
+  )
+}
+
 let pageCount = 1;
-
-document.querySelector(".total-contacts").innerHTML = `Total: ${users.length}`
-
-
-const contactInfos = (contactList) => {
+const pageDivider = 10;
+const addUsersToContactList = (contactList) => {
   for (let i = 0; i < contactList.length; i++) {
     const joinedFullDate = contactList[i].registered.date.split("-");
-    
     const joinedYear = joinedFullDate[0];
     const joinedMonth = joinedFullDate[1];
     const joinedDate = joinedFullDate[2].slice(0, 2);
-    if ((i + 1) % 10 == 1) {
 
-      displayContactList.push(`<ul class='contact-list page-${pageCount++}'>`);
-      displayContactList.push(
-        `<li class="contact-item cf">
-          <div class="contact-details">
-            <img class="avatar" src="${contactList[i].picture.medium}">
-            <h3>${contactList[i].name.first} ${contactList[i].name.last}</h3>
-            <span class="email">${contactList[i].email}</span>
-          </div>
-          <div class="joined-details"><span class="date">${joinedMonth}/${joinedDate}/${joinedYear}</span></div>
-        </li>`
-      )
-    } else {
-      displayContactList.push(
-        `<li class="contact-item cf">
-          <div class="contact-details">
-            <img class="avatar" src="${contactList[i].picture.medium}">
-            <h3>${contactList[i].name.first} ${contactList[i].name.last}</h3>
-            <span class="email">${contactList[i].email}</span>
-          </div>
-          <div class="joined-details"><span class="date">${joinedMonth}/${joinedDate}/${joinedYear}</span></div>
-        </li>`
-      )
+    if ((i + 1) % pageDivider == 1) {
+      displayedContactList.push(`<ul class='contact-list page-${pageCount++}'>`);
     }
-    if ((i + 1) % 10 == 0) {
-      displayContactList.push("</ul>");
+    displayedContactList.push(
+      userContactComponent(contactList[i].picture.medium,
+        contactList[i].name.first, contactList[i].name.last,
+        contactList[i].email, joinedMonth, joinedDate, joinedYear)
+    );
+    if ((i + 1) % pageDivider == 0) {
+      displayedContactList.push("</ul>");
     } 
   }
 }
 
-console.log(displayContactList);
-
-contactInfos(users);
-document.querySelector(".list").innerHTML += displayContactList.join('');
-
-// document.querySelector(".page-1").classList.add("active");
-
-const displayPges = pages => {
-  const temp = [];
-  for (let i = 0; i < pages; i++) {
-    temp.push(
+const numOfPagesComponent = totalPage => {
+  const pageElements = [];
+  for (let i = 0; i < totalPage; i++) {
+    pageElements.push(
       `<li class="page-num-list"><a href="#" class="page-num page-num-${i + 1}">${i + 1}</a></li>`
     )
   }
-  return temp.join('');
+  return pageElements.join('');
 }
 
-const pageNums = document.getElementsByClassName('page-num');
-
-document.querySelector(".pages").innerHTML = displayPges(pages);
 let currentPage = 1;
-
-
 const displayCurrentPage = (pageNum) => {
   currentPage = pageNum;
-  for (let i = 0; i < pages; i++) {
+  for (let i = 0; i < totalPage; i++) {
     const page = i + 1;
     
     if (i + 1 != currentPage) {
@@ -85,13 +67,14 @@ const displayCurrentPage = (pageNum) => {
   }
 }
 
-displayCurrentPage(currentPage);
 const changePage = (e) => {
   displayCurrentPage(parseInt(e.target.innerHTML));
-  addEventListenerToPageNum();
+  addOrRemoveEventListenerToPageNum();
 }
 
-const addEventListenerToPageNum = () => {
+
+const addOrRemoveEventListenerToPageNum = () => {
+  const pageNums = document.getElementsByClassName('page-num');
   for (let i = 0; i < pageNums.length; i++) {
     if (i + 1 != currentPage) {
       pageNums[i].addEventListener("click", changePage);
@@ -102,8 +85,12 @@ const addEventListenerToPageNum = () => {
   }
 }
 
-addEventListenerToPageNum();
-
+addUsersToContactList(users);
+document.querySelector(".list").innerHTML += displayedContactList.join('');
+document.querySelector(".total-contacts").innerHTML = `Total: ${users.length}`
+document.querySelector(".pages").innerHTML = numOfPagesComponent(totalPage);
+addOrRemoveEventListenerToPageNum();
+displayCurrentPage(currentPage);
 
 /**
  * references:
