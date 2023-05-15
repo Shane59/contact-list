@@ -3,7 +3,7 @@ import users from './data.js';
 const displayedContactList = [];
 const totalPage = Math.ceil(users.length / 10 );
 
-const userItem = (image, first, last, email, joinedMonth, joinedDate, joinedYear) => {
+const userContactComponent = (image, first, last, email, joinedMonth, joinedDate, joinedYear) => {
   return (
     `<li class="contact-item cf">
       <div class="contact-details">
@@ -29,7 +29,7 @@ const addUsersToContactList = (contactList) => {
       displayedContactList.push(`<ul class='contact-list page-${pageCount++}'>`);
     }
     displayedContactList.push(
-      userItem(contactList[i].picture.medium,
+      userContactComponent(contactList[i].picture.medium,
         contactList[i].name.first, contactList[i].name.last,
         contactList[i].email, joinedMonth, joinedDate, joinedYear)
     );
@@ -39,7 +39,7 @@ const addUsersToContactList = (contactList) => {
   }
 }
 
-const numOfPages = totalPage => {
+const numOfPagesComponent = totalPage => {
   const pageElements = [];
   for (let i = 0; i < totalPage; i++) {
     pageElements.push(
@@ -72,9 +72,9 @@ const changePage = (e) => {
   addOrRemoveEventListenerToPageNum();
 }
 
-const pageNums = document.getElementsByClassName('page-num');
 
 const addOrRemoveEventListenerToPageNum = () => {
+  const pageNums = document.getElementsByClassName('page-num');
   for (let i = 0; i < pageNums.length; i++) {
     if (i + 1 != currentPage) {
       pageNums[i].addEventListener("click", changePage);
@@ -88,7 +88,7 @@ const addOrRemoveEventListenerToPageNum = () => {
 addUsersToContactList(users);
 document.querySelector(".list").innerHTML += displayedContactList.join('');
 document.querySelector(".total-contacts").innerHTML = `Total: ${users.length}`
-document.querySelector(".pages").innerHTML = numOfPages(totalPage);
+document.querySelector(".pages").innerHTML = numOfPagesComponent(totalPage);
 addOrRemoveEventListenerToPageNum();
 displayCurrentPage(currentPage);
 
